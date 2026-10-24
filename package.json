@@ -1,6 +1,6 @@
 {
   "name": "@yiyunet/dsh-proxy-egress",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "本地出口代理（egress）桥：把只接受无凭据 HTTP(S) 代理地址的消费方，接到需要账号密码的上游代理上。失败即断联，绝不改走直连。零构建、零运行时依赖。 Local egress proxy bridge for DSH: hand a credential-free proxy URL to consumers that reject credentials, and inject the upstream auth on the hop that needs it. Fail-closed: no direct fallback, ever.",
   "keywords": [
     "deepseek-harness",
