@@ -28,11 +28,14 @@ In one sentence: it guarantees "anything that comes in goes through the proxy", 
 ## Install
 
 ```sh
-# 1. verify offline first (no host, no network needed)
+# 0. verify offline first (no host, no network needed)
 npm test && npm run smoke && npm run faultcheck
 
-# 2. link it into your DSH profile
-dsh plugin --profile <profile> add "link:<abs path to this repo>"
+# 1. install — this both installs the package and registers it in dsh.profile.bundles
+dsh plugin --profile <profile> add @yiyunet/dsh-proxy-egress
+
+# from source instead (for hacking on it): this one needs a manual bundles entry
+# dsh plugin --profile <profile> add "link:<abs path to this repo>"
 ```
 
 Then add a row to the profile's `cordis.patch.yml` — **as an id override, not an `insert`**

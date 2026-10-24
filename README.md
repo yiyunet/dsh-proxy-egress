@@ -30,11 +30,32 @@
 
 本插件是一个 DSH bundle（`package.json` 里声明了 `dsh.bundle.patch`）。
 
+### A · 从 npm 安装（推荐）
+
+```bash
+dsh plugin --profile web add @yiyunet/dsh-proxy-egress
+```
+
+一条命令做两件事：装包，**并自动把它登记进 `dsh.profile.bundles`** ——
+DSH 装完会回读每个新增依赖的 `dsh.bundle` 声明再行登记；没有该声明的包只当普通依赖装上，
+终端会给出 `installed as a plain dependency, not a profile layer` 的警告。
+
+把 `web` 换成你自己的 profile 名。
+
+### B · 从源码安装（改造或调试时用）
+
 1. 把本仓库放到本机任意目录。
-2. 在 profile 的 `package.json` 里加一条 `link:` 依赖，并把它加进 `dsh.profile.bundles`。
-3. **装出符号链接**：`dsh plugin --profile <profile> install`
+2. profile 的 `package.json`：`dependencies` 里加
+   `"@yiyunet/dsh-proxy-egress": "link:<本仓库绝对路径>"`，
+   并在 `dsh.profile.bundles` 里加 `"@yiyunet/dsh-proxy-egress"`。
+3. **装出符号链接**：`dsh plugin --profile <profile> install`。
    （`bundles` 是手改的，但链接不装出来，加载器就解析不到这个包。）
-4. 在 profile 的 `cordis.patch.yml` 里加**同 id 覆盖**行（见下面「配置」）。
+
+### 两种方式共同的收尾
+
+4. 在 profile 的 `cordis.patch.yml` 里加**同 id 覆盖**行（见下面「三、配置」）。
+   包自带的 patch 里，上游主机与凭据路径是**占位符** —— 不写覆盖行，插件不会启动
+   （但四个工具仍可用，`proxy_egress_status` 会把缺什么直接列出来）。
 5. **重启前预检**：`dsh --profile <profile> --dump-config`
    应当只看到**一行** `proxy-egress`，且带 `patched by ...cordis.patch.yml`。
    这一步能验证 YAML 语法与包解析，不用等重启才发现。
