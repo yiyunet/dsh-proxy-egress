@@ -1,0 +1,11 @@
+node_modules/
+*.tgz
+npm-debug.log*
+yarn-error.log*
+.DS_Store
+Thumbs.db
+
+# 构建/暂存残留（本插件零构建，保留以防将来引入）
+.lib-staging/
+.lib-backup/
+*.tmp

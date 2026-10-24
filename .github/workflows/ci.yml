@@ -1,0 +1,66 @@
+name: ci
+
+# 通过判据（对应发布 SOP 的 P7）：push / PR 上全绿，才允许进 P8 发布。
+#
+# 刻意不跑 `npm ci`：本包**零运行时依赖**，没有 package-lock.json，
+# 测试与脚本只依赖 Node 内置模块。少一步安装 = 少一类失败，也更快。
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: check (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # 双平台：Windows 特有行为（路径、瞬时文件锁、控制台编码）是本项目踩过的坑，
+        # 只在 Linux 上绿不足以说明问题。
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: 版本自检
+        run: node --version
+
+      # test + smoke + faultcheck + verify，与本地 `npm run check` 同一条命令。
+      - name: 全量检查
+        run: npm run check
+
+      # 脱敏扫描：词表放在仓库之外（此处用 secret 注入临时文件）。
+      # 未配置 secret 时脚本会**自动跳过**并按设计退出 0 —— CI 因此永远接触不到这些词。
+      - name: 脱敏扫描
+        if: runner.os == 'Linux'
+        shell: bash
+        env:
+          TERMS: ${{ secrets.DSH_PRIVATE_TERMS }}
+        run: |
+          if [ -n "$TERMS" ]; then
+            printf '%s\n' "$TERMS" > "$RUNNER_TEMP/terms.txt"
+            export DSH_PRIVATE_TERMS="$RUNNER_TEMP/terms.txt"
+            echo "词表已挂载"
+          else
+            echo "未配置 DSH_PRIVATE_TERMS —— 按设计跳过"
+          fi
+          npm run scan
+
+      # 打包清单必须真的产出、且含关键文件；否则发布出去是个空壳。
+      - name: 打包清单
+        if: runner.os == 'Linux'
+        run: |
+          npm pack --dry-run 2>&1 | tee pack.txt
+          for need in plugin-src/host/index.mjs plugin-src/client/client.js cordis.patch.yml LICENSE; do
+            grep -q "$need" pack.txt || { echo "::error::发布包缺少 $need"; exit 1; }
+          done

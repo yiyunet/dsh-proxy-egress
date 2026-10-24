@@ -1,0 +1,77 @@
+{
+  "name": "@yiyunet/dsh-proxy-egress",
+  "version": "0.1.0",
+  "description": "本地出口代理（egress）桥：把只接受无凭据 HTTP(S) 代理地址的消费方，接到需要账号密码的上游代理上。失败即断联，绝不改走直连。零构建、零运行时依赖。 Local egress proxy bridge for DSH: hand a credential-free proxy URL to consumers that reject credentials, and inject the upstream auth on the hop that needs it. Fail-closed: no direct fallback, ever.",
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "proxy",
+    "egress",
+    "http-proxy",
+    "connect-tunnel",
+    "settings-panel",
+    "fail-closed"
+  ],
+  "author": {
+    "name": "yiyunet",
+    "url": "https://github.com/yiyunet"
+  },
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yiyunet/dsh-proxy-egress.git"
+  },
+  "homepage": "https://github.com/yiyunet/dsh-proxy-egress#readme",
+  "bugs": {
+    "url": "https://github.com/yiyunet/dsh-proxy-egress/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "main": "./plugin-src/host/index.mjs",
+  "exports": {
+    ".": "./plugin-src/host/index.mjs",
+    "./client": "./plugin-src/client/client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "plugin-src",
+    "scripts",
+    "test",
+    "docs",
+    "cordis.patch.yml",
+    "LICENSE",
+    "README.md",
+    "README.en.md",
+    "CHANGELOG.md"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-slots",
+        "@deepseek-ai/dsh-client-connection",
+        "@deepseek-ai/dsh-client-ui-settings-general"
+      ]
+    }
+  },
+  "engines": {
+    "node": ">=22.19"
+  },
+  "scripts": {
+    "test": "node --test test/parse.test.mjs test/config.test.mjs test/credentials.test.mjs test/overrides.test.mjs test/rpc.test.mjs test/client.test.mjs",
+    "smoke": "node scripts/smoke.mjs",
+    "faultcheck": "node scripts/faultcheck.mjs",
+    "verify": "node scripts/verify-package.mjs",
+    "scan": "node scripts/scan-secrets.mjs",
+    "check": "npm run test && npm run smoke && npm run faultcheck && npm run verify",
+    "prepublishOnly": "npm run check"
+  }
+}

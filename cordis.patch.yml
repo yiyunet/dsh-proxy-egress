@@ -1,0 +1,33 @@
+# dsh-proxy-egress 的装载行。
+#
+# 凭据有两条落地路径，二选一（本文件是"模式 B：凭据外置"，推荐）：
+#   模式 A：把 username / password 写在本行的 config 里（明文进 profile patch）
+#   模式 B：把 username / password 写进一个独立 JSON 文件，本行只写该文件路径
+#
+# 模式 B 的凭据文件格式（UTF-8）：
+#   { "username": "<账号>", "password": "<密码>" }
+#
+# ── 装载后你应该只改这里，不要改插件源码 ────────────────────────────────────
+- insert:
+    - id: proxy-egress
+      name: '@yiyunet/dsh-proxy-egress'
+      config:
+        listen:
+          host: '127.0.0.1'   # 强制回环；写别的会被拒绝启动
+          port: 8899
+        upstream:
+          type: 'http'        # http | https
+          host: '<上游代理主机>'
+          port: 8080
+        credentialSource: 'file'
+        credentialFile: '<凭据 JSON 绝对路径>'
+        # credentialSource 用 'config' 时才写这两行（明文进本文件）：
+        # username: '<账号>'
+        # password: '<密码>'
+        allowConnectPorts: [443]
+        expectedEgressIps: []            # 期望出口 IP 列表；空 = 不校验
+        egressMismatchAction: 'warn'     # warn | block
+        selfCheck:
+          enabled: true
+          url: 'https://api.ipify.org?format=json'
+          timeoutMs: 12000
