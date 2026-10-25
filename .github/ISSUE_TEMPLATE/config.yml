@@ -1,0 +1,13 @@
+# 新 issue 的入口页：两条「你可能先想看一眼」的指路 ＋ 允许开空白 issue。
+#
+# 为什么留 `blank_issues_enabled: true`：模板是**帮忙**，不是门槛。
+# 强制所有反馈都填表，只会把「用法问一句」的人挡在门外，或者逼他硬填一个 bug 模板。
+blank_issues_enabled: true
+
+contact_links:
+  - name: 先看它「能保证什么、不能保证什么」
+    url: https://github.com/yiyunet/dsh-proxy-egress#readme
+    about: 安装、配置、验证、分类失败码与几条明示的限制 —— 都在 README 里 / Install, config, verification, failure codes and the explicit limits
+  - name: yiyunet 的其他 DSH 插件 / More DSH plugins
+    url: https://github.com/yiyunet
+    about: 学习插件、钉钉连接、文档体检、MCP 管理 / Learning, DingTalk, doc audit, MCP manager

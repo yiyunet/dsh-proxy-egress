@@ -190,6 +190,16 @@ npm run check      # 上面全部串起来跑；prepublishOnly 用的就是它
 
 ---
 
-## 七、许可
+## 七、反馈
+
+遇到问题或想要新功能，[提一个 issue](https://github.com/yiyunet/dsh-proxy-egress/issues/new/choose)。
+报问题时写上 **DSH 版本**和**插件版本**，修起来最快。
+
+`proxy_egress_selfcheck` 的分类结果几乎能直接定位问题，值得贴上 —— 但请先做两件事：
+**删掉上游凭据**、**抹掉真实出口 IP**（那是你这个网络的身份信息）。
+
+---
+
+## 八、许可
 
 MIT。

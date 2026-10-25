@@ -1,0 +1,59 @@
+name: 报告问题 / Bug report
+description: 插件出错、不工作，或者和说明不一致 / Something is broken or not working as described
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: 谢谢反馈！中文、英文都行。/ Thanks for the report! Chinese or English is fine.
+
+  - type: textarea
+    id: what
+    attributes:
+      label: 发生了什么 / What happened
+      description: 你做了什么、看到了什么、本来应该怎样 / What you did, what you saw, what you expected
+    validations:
+      required: true
+
+  - type: dropdown
+    id: where
+    attributes:
+      label: 哪一段 / Which part
+      description: 不确定就留空 / Leave blank if unsure
+      multiple: false
+      options:
+        - 安装 / 启动本地监听
+        - 配置（上游地址、凭据文件）
+        - 自检结果不对（selfcheck 报出的分类）
+        - 代理在跑，但目标站点连不上
+        - 某个分类失败码看不懂
+        - 一条保证没有做到（README「一、它能保证什么」里承诺的那几条）
+        - 不算某一项（文档、其他）/ other
+
+  - type: input
+    id: versions
+    attributes:
+      label: 版本 / Versions
+      description: DSH 版本和插件版本，DSH 侧栏的插件页能看到 / DSH and plugin versions, shown on the DSH Plugins page
+      placeholder: DSH 0.2.1-rc.1, plugin 0.1.1
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: 系统 / OS
+      placeholder: Windows 11
+    validations:
+      required: true
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: 自检输出或截图 / Self-check output or screenshots
+      description: |
+        可选，但对排障极有效：`proxy_egress_selfcheck` 的分类结果几乎能直接定位问题。
+        **贴之前请做两件事**：① 删掉上游凭据；② **抹掉真实出口 IP** ——
+        出口 IP 本身就是你这个网络的身份信息，不该出现在公开 issue 里。
+        / Optional but very useful: the `proxy_egress_selfcheck` verdict usually pinpoints it.
+        **Before pasting: (1) remove upstream credentials, (2) mask your real egress IP** —
+        the egress IP identifies your network and does not belong in a public issue.

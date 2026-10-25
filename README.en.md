@@ -110,6 +110,15 @@ npm run verify     # release contract assertions
 DSH_PRIVATE_TERMS=<path> npm run scan   # public-release redaction scan (word list stays outside the repo)
 ```
 
+## Feedback
+
+Found a problem or want a new feature? [Open an issue](https://github.com/yiyunet/dsh-proxy-egress/issues/new/choose).
+Include the **DSH version** and the **plugin version** — that makes a fix much faster.
+
+The `proxy_egress_selfcheck` verdict usually pinpoints the problem, so it is worth pasting —
+but do two things first: **remove upstream credentials** and **mask your real egress IP**
+(that IP identifies your network).
+
 ## License
 
 MIT
